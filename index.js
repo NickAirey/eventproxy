@@ -12,11 +12,11 @@ function getEvents() {
             .query({end: '2018-05-01'})
             .end((response) => {
                 if (response.error) {
-                    reject(response)
+                    reject(response);
                 } else {
-                    resolve(response.body)
+                    resolve(response.body);
                 }
-            })
+            });
     });
 }
 
