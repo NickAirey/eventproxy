@@ -1,8 +1,8 @@
 
-var unirest = require('unirest');
-var util = require('util');
+let unirest = require('unirest');
+let util = require('util');
 
-var auth = process.env.auth;
+let auth = process.env.auth;
 
 function getEvents() {
     return new Promise( (resolve, reject) => {
@@ -25,5 +25,7 @@ function logObject(data) {
     return data;
 }
 
-
-getEvents().then(logObject);
+exports.handler = async (event) => {
+    logObject(event);
+    return getEvents().then(logObject);
+};
