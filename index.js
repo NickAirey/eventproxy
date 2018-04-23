@@ -4,12 +4,12 @@ let util = require('util');
 
 let auth = process.env.auth;
 
-function getEvents() {
+function getEvents(start, end) {
     return new Promise( (resolve, reject) => {
         unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.json')
             .auth(auth, 'x', true)
-            .query({start: '2018-04-01'})
-            .query({end: '2018-05-01'})
+            .query({start: start})
+            .query({end: end})
             .end((response) => {
                 if (response.error) {
                     reject(response);
@@ -26,6 +26,8 @@ function logObject(data) {
 }
 
 exports.handler = async (event) => {
-    logObject(event);
-    return getEvents().then(logObject);
+    return getEvents(event.start, event.end);
 };
+
+exports.handler({start: '2018-04-01', end: '2018-05-01'}).then(logObject);
+
