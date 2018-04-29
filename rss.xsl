@@ -3,6 +3,8 @@
                 xmlns:date="http://exslt.org/dates-and-times"
                 extension-element-prefixes="date"
                 version="1.0">
+  <xsl:output method="xml"/>
+
   <xsl:template match="/">
     <rss version="2.0">
       <channel>
