@@ -2,19 +2,20 @@
 let libxslt = require('libxslt');
 let unirest = require('unirest');
 let util = require('util');
+let fs = require('fs');
 const END_DAY_OFFSET = 90;
 
 let auth = process.env.auth;
 
 function getEvents(queryObject) {
     return new Promise( (resolve, reject) => {
-        unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.xmls')
+        unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.xml')
             .auth(auth, 'x', true)
             .query(queryObject)
             .end((response) => {
                 if (response.error) {
                     logError(response.error);
-                    reject( {statusCode: response.statusCode, body: response.statusMessage});
+                    reject(response.error);
                 } else {
                     resolve(response.body);
                 }
@@ -43,6 +44,14 @@ function logObject(data) {
     return data;
 }
 
+function readEvents(fileName) {
+  return new Promise(function(resolve, reject){
+    fs.readFile(fileName, 'utf-8', (err, data) => {
+        err ? reject(err) : resolve(data);
+    });
+  });
+}
+
 // takes [stylesheetObject, xmlInput]
 function applyStylesheet(args) {
     return new Promise( (resolve, reject) => {
@@ -69,22 +78,22 @@ function getQueryObject() {
     return logObject({start: startDateStr, end: endDateStr});
 }
 
+/*
+    parallel: retrieve stylsheet and xml event data
+    apply stylesheet to xml
+    return result
+*/
 function invoke() {
-    let queryObject = getQueryObject();
-    
-    // retrieve stylsheet and event data
-    Promise.all([getStyleSheet('rss.xsl'), getEvents(queryObject)])
+//    Promise.all([getStyleSheet('rss.xsl'), getEvents(getQueryObject())])
+    Promise.all([getStyleSheet('rss.xsl'), readEvents('events.xml')])
     .then(applyStylesheet)
     .then(xmlOutput => {
-        let x = {statusCode: 200, body: xmlOutput};
-        return logObject(x);
+        return logObject({statusCode: 200, headers: {'Content-Type': 'text/xml'}, body: xmlOutput});
     })
-    .catch((err) => {
-        // TODO: read the reject object - convert upstream message
-        //let x = {statusCode: statusCode, body: err.message};
-        return logError(err);
+    .catch(err => {
+        logError(err);
+        return logError({statusCode: 503, body: 'error processing request'});
     });
 }
-
 
 invoke();
