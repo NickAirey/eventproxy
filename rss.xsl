@@ -30,9 +30,7 @@
             <item>
               <title><xsl:value-of select="name" /></title>
               <description><xsl:value-of select="description"/></description>
-              <pubDate>
-                <xsl:value-of select="start_date"/>
-              </pubDate>
+              <pubDate><xsl:value-of select="start_date"/></pubDate>
             </item>
           </xsl:if>
         </xsl:for-each>

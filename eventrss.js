@@ -1,9 +1,11 @@
 
 let libxslt = require('libxslt');
+let libxmljs = libxslt.libxmljs;
+
 let unirest = require('unirest');
 let util = require('util');
 let fs = require('fs');
-const END_DAY_OFFSET = 90;
+const END_DAY_OFFSET = 30;
 
 let auth = process.env.auth;
 
@@ -44,20 +46,42 @@ function logObject(data) {
     return data;
 }
 
-function readEvents(fileName) {
-  return new Promise(function(resolve, reject){
-    fs.readFile(fileName, 'utf-8', (err, data) => {
-        err ? reject(err) : resolve(data);
-    });
-  });
+// function readEvents(fileName) {
+//   return new Promise(function(resolve, reject){
+//     fs.readFile(fileName, 'utf-8', (err, data) => {
+//         err ? reject(err) : resolve(data);
+//     });
+//   });
+// }
+
+/*
+   expects element with text parseable as a date
+   this is a nasty hack to add 10 hours to a UTC date
+*/
+function addTZOffsetAndConvertToISO(dateElement) {
+    const OFFSET_HOURS = 10;
+    
+    let date1 = new Date(dateElement.text());
+    date1.setHours(date1.getHours()+OFFSET_HOURS);
+    let date1UTCStr = date1.toUTCString();
+    let date2Str = date1UTCStr.substring(0, date1UTCStr.length-4)+" +"+OFFSET_HOURS+"00";
+    
+    dateElement.text(date2Str);
 }
 
-// takes [stylesheetObject, xmlInput]
+// takes [stylesheetObject, xmlInputStr]
+// preprocesses xml to convert dates to ISO format and convert from UTC to local offset
 function applyStylesheet(args) {
     return new Promise( (resolve, reject) => {
         const stylesheet = args[0];
-        const xmlInput = args[1];
-        stylesheet.apply(xmlInput, null, null, (error, xmlOutput) => {
+        const xmlInputStr = args[1];
+        
+        var xmlDoc = libxmljs.parseXml(xmlInputStr);
+        
+        xmlDoc.find('//start_date').forEach(element => addTZOffsetAndConvertToISO(element));
+        xmlDoc.find('//end_date').forEach(element => addTZOffsetAndConvertToISO(element));
+        
+        stylesheet.apply(xmlDoc.toString(), null, null, (error, xmlOutput) => {
             if (error) {
                 reject(error);
             }
@@ -84,8 +108,8 @@ function getQueryObject() {
     return result
 */
 function invoke() {
-//    Promise.all([getStyleSheet('rss.xsl'), getEvents(getQueryObject())])
-    Promise.all([getStyleSheet('rss.xsl'), readEvents('events.xml')])
+    Promise.all([getStyleSheet('rss.xsl'), getEvents(getQueryObject())])
+//    Promise.all([getStyleSheet('rss.xsl'), readEvents('events.xml')])
     .then(applyStylesheet)
     .then(xmlOutput => {
         return logObject({statusCode: 200, headers: {'Content-Type': 'text/xml'}, body: xmlOutput});
