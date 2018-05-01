@@ -55,19 +55,18 @@ function readEvents(fileName) {
 }
 
 /*
-   expects element with text parseable as a date
-   this is a nasty hack to add 10 hours to a UTC date
+   this is a nasty hack to add 10 hours to a UTC date str
 */
-function addTZOffsetAndConvertToISODate(date1) {
+function addTZOffsetAndConvertToISOStr(dateStr) {
     const OFFSET_HOURS = 10;
-    
+    var date1 = new Date(dateStr);
     date1.setHours(date1.getHours()+OFFSET_HOURS);
     let date1UTCStr = date1.toUTCString();
     return date1UTCStr.substring(0, date1UTCStr.length-4)+" +"+OFFSET_HOURS+"00";
 }
 
 function addTZOffsetAndConvertToISOElement(dateElement) {
-    dateElement.text(addTZOffsetAndConvertToISODate(new Date(dateElement.text())));
+    dateElement.text(addTZOffsetAndConvertToISOStr(dateElement.text()));
 }
 
 
@@ -80,7 +79,7 @@ function applyStylesheet(args) {
         
         var xmlDoc = libxmljs.parseXml(xmlInputStr);
         
-        xmlDoc.get('//rsp').attr({ run_date: new Date(Date.now()).toUTCString() });
+        xmlDoc.get('//rsp').attr({ run_date: addTZOffsetAndConvertToISOStr(new Date(Date.now()).toUTCString()) });
         xmlDoc.find('//start_date').forEach(element => addTZOffsetAndConvertToISOElement(element));
         xmlDoc.find('//end_date').forEach(element => addTZOffsetAndConvertToISOElement(element));
         
