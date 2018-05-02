@@ -2,55 +2,52 @@
 let unirest = require('unirest');
 let util = require('util');
 
+const END_DAY_OFFSET = 30;
+
 let auth = process.env.auth;
 
-function getEvents(start, end) {
-    let paramsError = null;
-    if (!start) {
-        paramsError = '"start" parameter not found'
-    }
-    if (!end) {
-        paramsError += (paramsError) ? ', ' : '';
-        paramsError += '"end" parameter not found'
-    }
-    if (paramsError) {
-        return Promise.reject({statusCode: 500, body: paramsError});
-    }
+function getEvents(queryObject) {
 
     return new Promise( (resolve, reject) => {
         unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.json')
             .auth(auth, 'x', true)
-            .query({start: start})
-            .query({end: end})
+            .query(queryObject)
             .end((response) => {
                 if (response.error) {
-                    logError(response.error);
-                    reject( {statusCode: response.statusCode, body: response.statusMessage});
-                } else {
-                    switch (response.body.status) {
-                        case 'ok':
-                            resolve({statusCode: response.statusCode, body: response.body});
-                            break;
+                    reject(response.error);
+                } 
+                switch (response.body.status) {
+                    case 'ok':
+                        resolve(response.body.events);
+                        break;
 
-                        case 'fail':
-                            //logError(response);
-                            reject({statusCode: response.body.error.code, body: response.body.error.message});
-                            break;
+                    case 'fail':
+                        reject(response.body);
+                        break;
 
-                        default:
-                            reject({statusCode: 500, body: 'unknown EL response code'})
-                    }
+                    default:
+                        reject('unknown EL response code');
                 }
             });
     });
 }
 
+function addTZOffsetAndConvertToISOStr(dateStr) {
+    const OFFSET_HOURS = 10;
+    var date1 = new Date(dateStr);
+    date1.setHours(date1.getHours()+OFFSET_HOURS);
+    let date1UTCStr = date1.toUTCString();
+    return date1UTCStr.substring(0, date1UTCStr.length-4)+" +"+OFFSET_HOURS+"00";
+}
+
+
 function mapEvents(response) {
     return new Promise( (resolve, reject) => {
         try {
-            response.body.events.event.map(function (event) {
+            response.event.forEach(event => {
                 delete event.url;
-                return event;
+                event.start_date = addTZOffsetAndConvertToISOStr(event.start_date);
+                event.end_date = addTZOffsetAndConvertToISOStr(event.end_date);
             });
             resolve(response);
         } catch (err) {
@@ -69,13 +66,28 @@ function logError(data) {
     return data;
 }
 
-exports.handler = async (event) => {
-    return getEvents(event.start, event.end)
-        .then(mapEvents)
-        .then(logObject)
-        .catch((err) => {
-            return(logError(err))
-        });
-};
+function getQueryObject() {
+    let startDate = new Date();
+    startDate.setHours(0,0,0,0);
+    let startDateStr = startDate.toISOString().slice(0, 10);
+    
+    let endDate = new Date();
+    endDate.setDate(startDate.getDate()+END_DAY_OFFSET);
+    let endDateStr = endDate.toISOString().slice(0, 10);
 
-exports.handler({start: '2018-04-01', end: '2018-05-01'});
+    return logObject({start: startDateStr, end: endDateStr});
+}
+
+function invoke() {
+    getEvents(getQueryObject())
+    .then(mapEvents)
+    .then(jsonOutput => {
+        return logObject({statusCode: 200, body: jsonOutput});
+    })
+    .catch(err => {
+        logError(err);
+        return logError({statusCode: 503, body: 'error processing request'});
+    });
+}
+
+invoke();

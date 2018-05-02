@@ -16,11 +16,12 @@ function getEvents(queryObject) {
             .query(queryObject)
             .end((response) => {
                 if (response.error) {
-                    logError(response.error);
                     reject(response.error);
-                } else {
+                }
+                if (response.status >= 200 && response.status < 300) {
                     resolve(response.body);
                 }
+                reject(response.body);
             });
     });
 }
@@ -77,13 +78,13 @@ function applyStylesheet(args) {
         const stylesheet = args[0];
         const xmlInputStr = args[1];
         
-        var xmlDoc = libxmljs.parseXml(xmlInputStr);
+        var xmlDoc = libxmljs.parseXml(xmlInputStr, { noblanks: true });
         
         xmlDoc.get('//rsp').attr({ run_date: addTZOffsetAndConvertToISOStr(new Date(Date.now()).toUTCString()) });
         xmlDoc.find('//start_date').forEach(element => addTZOffsetAndConvertToISOElement(element));
         xmlDoc.find('//end_date').forEach(element => addTZOffsetAndConvertToISOElement(element));
         
-        console.log(xmlDoc.toString());
+        // console.log(xmlDoc.toString());
         
         stylesheet.apply(xmlDoc.toString(), null, null, (error, xmlOutput) => {
             if (error) {
@@ -112,8 +113,8 @@ function getQueryObject() {
     return result
 */
 function invoke() {
-//    Promise.all([getStyleSheet('rss.xsl'), getEvents(getQueryObject())])
-    Promise.all([getStyleSheet('rss.xsl'), readEvents('events.xml')])
+    Promise.all([getStyleSheet('rss.xsl'), getEvents(getQueryObject())])
+//    Promise.all([getStyleSheet('rss.xsl'), readEvents('events.xml')])
     .then(applyStylesheet)
     .then(xmlOutput => {
         return logObject({statusCode: 200, headers: {'Content-Type': 'text/xml'}, body: xmlOutput});
