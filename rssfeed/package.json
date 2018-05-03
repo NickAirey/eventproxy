@@ -1,0 +1,15 @@
+{
+  "name": "rssfeed",
+  "version": "1.0.0",
+  "description": "event proxy generating rss feed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "libxslt": "^0.7.0",
+    "unirest": "^0.5.1"
+  }
+}

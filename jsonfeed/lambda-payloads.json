@@ -1,0 +1,13 @@
+{
+    "jsonfeed": {
+        "apigateway": {
+            "path": "/jsonfeed",
+            "method": {
+                "value": "GET",
+                "items": [
+                    "GET",
+                ]
+            }
+        }
+    }
+}

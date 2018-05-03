@@ -1,0 +1,13 @@
+{
+    "rssfeed": {
+        "apigateway": {
+            "path": "/rssfeed",
+            "method": {
+                "value": "GET",
+                "items": [
+                    "GET",
+                ]
+            }
+        }
+    }
+}
