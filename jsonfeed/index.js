@@ -4,11 +4,15 @@ let util = require('util');
 
 const END_DAY_OFFSET = 30;
 
-let auth = process.env.auth;
 
 function getEvents(queryObject) {
-
     return new Promise( (resolve, reject) => {
+        console.log(util.inspect(process.env));
+        let auth = process.env.auth;
+        if (typeof auth === 'undefined' || auth === null) {
+            reject('unable to find authentication key');
+        }
+        
         unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.json')
             .auth(auth, 'x', true)
             .query(queryObject)

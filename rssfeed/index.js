@@ -6,10 +6,13 @@ let util = require('util');
 
 const END_DAY_OFFSET = 30;
 
-let auth = process.env.auth;
-
 function getEvents(queryObject) {
     return new Promise( (resolve, reject) => {
+        let auth = process.env.auth;
+        if (typeof auth === 'undefined' || auth === null) {
+            reject('unable to find authentication key');
+        }
+
         unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.xml')
             .auth(auth, 'x', true)
             .query(queryObject)
@@ -107,7 +110,7 @@ exports.handler = function(event, context, callback) {
 
   console.log(util.inspect(event));
 
-  Promise.all([getStyleSheet('rss.xsl'), getEvents(getQueryObject())])
+  Promise.all([getStyleSheet('./rssfeed/rss.xsl'), getEvents(getQueryObject())])
     .then(applyStylesheet)
     .then(xmlOutput => {
         callback(null, logObject({statusCode: 200, headers: {'Content-Type': 'text/xml'}, body: xmlOutput}));
