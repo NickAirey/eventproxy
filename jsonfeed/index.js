@@ -1,14 +1,42 @@
 
 let unirest = require('unirest');
 let util = require('util');
+let AWS = require('aws-sdk');
 
 const END_DAY_OFFSET = 30;
 
-
-function getEvents(queryObject) {
+function getParameter(paramName) {
+    
     return new Promise( (resolve, reject) => {
-        console.log(util.inspect(process.env));
-        let auth = process.env.auth;
+
+        let awsRegion = process.env.AWS_REGION;
+        if (typeof awsRegion === 'undefined' || awsRegion === null) {
+            reject('unable to find region');
+        }
+
+        let ssm = new AWS.SSM({region: awsRegion});
+        var params = {
+            Names: [ paramName ],
+            WithDecryption: false
+        };
+        ssm.getParameters(params, function(err, data) {
+            if (err) {
+                reject(err.message); 
+            } else {
+                logObject(data);
+                resolve(data.Parameters);          
+            }
+        });
+    });
+}
+
+function getEvents(params) {
+    return new Promise( (resolve, reject) => {
+
+        let queryObject = params[0];
+        let parameters = params[1];
+
+        let auth = parameters[0].Value;
         if (typeof auth === 'undefined' || auth === null) {
             reject('unable to find authentication key');
         }
@@ -87,9 +115,15 @@ function getQueryObject() {
 */
 exports.handler = function(event, context, callback) {
 
-  console.log(util.inspect(event));
+  //console.log('event');
+  //console.log(util.inspect(event));
+  //console.log('context');
+  //console.log(util.inspect(context));
+  //console.log('process env');
+  //console.log(util.inspect(process.env));
 
-  getEvents(getQueryObject())
+  Promise.all([getQueryObject(), getParameter('/api-key/elvanto')])
+    .then(getEvents)
     .then(mapEvents)
     .then(jsonOutput => {
         callback(null, logObject({statusCode: 200, body: jsonOutput}));
