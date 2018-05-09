@@ -23,8 +23,15 @@ function getParameter(paramName) {
             if (err) {
                 reject(err.message); 
             } else {
-                logObject(data);
-                resolve(data.Parameters);          
+                if (data.InvalidParameters[0] == paramName) {
+                    reject('Unable to retrieve parameter: '+paramName);
+                } 
+                else if (data.Parameters[0].Name == paramName) {
+                    resolve(data.Parameters[0]);
+                } 
+                else {
+                    reject('error retrieving parameter: '+paramName);
+                }
             }
         });
     });
@@ -34,9 +41,9 @@ function getEvents(params) {
     return new Promise( (resolve, reject) => {
 
         let queryObject = params[0];
-        let parameters = params[1];
+        let authParamObject = params[1];
 
-        let auth = parameters[0].Value;
+        let auth = authParamObject.Value;
         if (typeof auth === 'undefined' || auth === null) {
             reject('unable to find authentication key');
         }
@@ -115,21 +122,18 @@ function getQueryObject() {
 */
 exports.handler = function(event, context, callback) {
 
-  //console.log('event');
-  //console.log(util.inspect(event));
-  //console.log('context');
-  //console.log(util.inspect(context));
-  //console.log('process env');
-  //console.log(util.inspect(process.env));
-
   Promise.all([getQueryObject(), getParameter('/api-key/elvanto')])
     .then(getEvents)
     .then(mapEvents)
     .then(jsonOutput => {
-        callback(null, logObject({statusCode: 200, body: jsonOutput}));
+        let result = {"statusCode": 200, "body": JSON.stringify(jsonOutput)};
+        logObject(result);
+        callback(null, result);
     })
     .catch(err => {
         logError(err);
-        callback(null, logError({statusCode: 503, body: 'error processing request'}));
+        let result = {"statusCode": 503, "body": "error processing request"};
+        logError(result);
+        callback(null, result);
     });
 };

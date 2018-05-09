@@ -3,12 +3,51 @@ let libxslt = require('libxslt');
 let libxmljs = libxslt.libxmljs;
 let unirest = require('unirest');
 let util = require('util');
+let AWS = require('aws-sdk');
+
 
 const END_DAY_OFFSET = 30;
 
-function getEvents(queryObject) {
+function getParameter(paramName) {
+    
     return new Promise( (resolve, reject) => {
-        let auth = process.env.auth;
+
+        let awsRegion = process.env.AWS_REGION;
+        if (typeof awsRegion === 'undefined' || awsRegion === null) {
+            reject('unable to find region');
+        }
+
+        let ssm = new AWS.SSM({region: awsRegion});
+        var params = {
+            Names: [ paramName ],
+            WithDecryption: false
+        };
+        ssm.getParameters(params, function(err, data) {
+            if (err) {
+                reject(err.message); 
+            } else {
+                if (data.InvalidParameters[0] == paramName) {
+                    reject('Unable to retrieve parameter: '+paramName);
+                } 
+                else if (data.Parameters[0].Name == paramName) {
+                    resolve(data.Parameters[0]);
+                } 
+                else {
+                    reject('error retrieving parameter: '+paramName);
+                }
+            }
+        });
+    });
+}
+
+
+function getEvents(params) {
+    return new Promise( (resolve, reject) => {
+        
+        let queryObject = params[0];
+        let authParamObject = params[1];
+
+        let auth = authParamObject.Value;
         if (typeof auth === 'undefined' || auth === null) {
             reject('unable to find authentication key');
         }
@@ -102,21 +141,28 @@ function getQueryObject() {
 /*
   invocation entry point
   
-  parallel: retrieve stylsheet and xml event data
+  parallel: 
+      retrieve stylsheet
+      parallel: retrieve api key and query object
+      
     apply stylesheet to xml
     return result
 */
 exports.handler = function(event, context, callback) {
-
-  console.log(util.inspect(event));
-
-  Promise.all([getStyleSheet('./rssfeed/rss.xsl'), getEvents(getQueryObject())])
+    Promise.all([
+        getStyleSheet('./rssfeed/rss.xsl'),
+        Promise.all([getQueryObject(), getParameter('/api-key/elvanto')]).then(getEvents)
+    ])
     .then(applyStylesheet)
     .then(xmlOutput => {
-        callback(null, logObject({statusCode: 200, headers: {'Content-Type': 'text/xml'}, body: xmlOutput}));
+        let result = {"statusCode": 200, "headers": {'Content-Type': 'text/xml'}, "body": xmlOutput};
+        logObject(result);
+        callback(null, result);
     })
     .catch(err => {
         logError(err);
-        callback(null, logError({statusCode: 503, body: 'error processing request'}));
+        let result = {"statusCode": 503, "body": "error processing request"};
+        logError(result);
+        callback(null, result);
     });
 };
