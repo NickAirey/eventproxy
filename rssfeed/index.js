@@ -113,16 +113,27 @@ function applyStylesheet(args) {
         
         var xmlDoc = libxmljs.parseXml(xmlInputStr, { noblanks: true });
         
-        xmlDoc.get('//rsp').attr({ run_date: addTZOffsetAndConvertToISOStr(new Date(Date.now()).toUTCString()) });
-        xmlDoc.find('//start_date').forEach(element => addTZOffsetAndConvertToISOElement(element));
-        xmlDoc.find('//end_date').forEach(element => addTZOffsetAndConvertToISOElement(element));
-        
-        stylesheet.apply(xmlDoc.toString(), null, null, (error, xmlOutput) => {
+        stylesheet.apply(xmlDoc, (error, xmlOutput) => {
             if (error) {
                 reject(error);
+            } else {
+                resolve(xmlOutput);
             }
-            resolve(xmlOutput);
         });
+    });
+}
+
+// takes xmlInput document
+// postprocess xml to convert dates to ISO format and convert from UTC to local TZ
+function processDates(xmlDoc) {
+    return new Promise( (resolve, reject) => {
+        
+        //var xmlDoc = libxmljs.parseXml(xmlInputStr, { noblanks: true });
+        
+        xmlDoc.get('//channel/pubDate').text(addTZOffsetAndConvertToISOStr(new Date(Date.now()).toUTCString()));
+        xmlDoc.find('//item/pubDate').forEach(element => addTZOffsetAndConvertToISOElement(element));
+        
+        resolve(xmlDoc.toString());    
     });
 }
 
@@ -154,6 +165,7 @@ exports.handler = function(event, context, callback) {
         Promise.all([getQueryObject(), getParameter('/api-key/elvanto')]).then(getEvents)
     ])
     .then(applyStylesheet)
+    .then(processDates)
     .then(xmlOutput => {
         let result = {"statusCode": 200, "headers": {'Content-Type': 'text/xml'}, "body": xmlOutput};
         logObject(result);
