@@ -15,7 +15,7 @@ Resources:
           Type: Api
           Properties:
             Path: /rssfeed
-            Method: ANY
+            Method: GET
   rssfeedPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
@@ -40,7 +40,7 @@ Resources:
           Type: Api
           Properties:
             Path: /jsonfeed
-            Method: ANY
+            Method: GET
   jsonfeedPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
