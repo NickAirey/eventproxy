@@ -5,8 +5,12 @@ let unirest = require('unirest');
 let util = require('util');
 let AWS = require('aws-sdk');
 
+let preprocessEvents = require('./xmlProcessing').preprocessEvents;
+let postProcessEvents = require('./xmlProcessing').postProcessEvents;
 
-const END_DAY_OFFSET = 30;
+const STANDARD_EVENT_DAY_OFFSET = 14;
+const MAJOR_EVENT_DAY_OFFSET = 90
+
 
 function getParameter(paramName) {
     
@@ -55,6 +59,7 @@ function getEvents(params) {
         unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.xml')
             .auth(auth, 'x', true)
             .query(queryObject)
+            .query('fields\[0\]=assets')
             .end((response) => {
                 if (response.error) {
                     reject(response.error);
@@ -88,31 +93,17 @@ function logObject(data) {
     return data;
 }
 
-/*
-   this is a nasty hack to add 10 hours to a UTC date str
-*/
-function addTZOffsetAndConvertToISOStr(dateStr) {
-    const OFFSET_HOURS = 10;
-    var date1 = new Date(dateStr);
-    date1.setHours(date1.getHours()+OFFSET_HOURS);
-    let date1UTCStr = date1.toUTCString();
-    return date1UTCStr.substring(0, date1UTCStr.length-4)+" +"+OFFSET_HOURS+"00";
-}
 
-function addTZOffsetAndConvertToISOElement(dateElement) {
-    dateElement.text(addTZOffsetAndConvertToISOStr(dateElement.text()));
-}
+    
 
 
-// takes [stylesheetObject, xmlInputStr]
-// preprocesses xml to convert dates to ISO format and convert from UTC to local TZ
+// takes [stylesheetObject, xmlInputDoc]
+// returns processed xml doc now in rss format
 function applyStylesheet(args) {
     return new Promise( (resolve, reject) => {
         const stylesheet = args[0];
-        const xmlInputStr = args[1];
-        
-        var xmlDoc = libxmljs.parseXml(xmlInputStr, { noblanks: true });
-        
+        const xmlDoc = args[1];
+
         stylesheet.apply(xmlDoc, (error, xmlOutput) => {
             if (error) {
                 reject(error);
@@ -123,19 +114,7 @@ function applyStylesheet(args) {
     });
 }
 
-// takes xmlInput document
-// postprocess xml to convert dates to ISO format and convert from UTC to local TZ
-function processDates(xmlDoc) {
-    return new Promise( (resolve, reject) => {
-        
-        //var xmlDoc = libxmljs.parseXml(xmlInputStr, { noblanks: true });
-        
-        xmlDoc.get('//channel/pubDate').text(addTZOffsetAndConvertToISOStr(new Date(Date.now()).toUTCString()));
-        xmlDoc.find('//item/pubDate').forEach(element => addTZOffsetAndConvertToISOElement(element));
-        
-        resolve(xmlDoc.toString());    
-    });
-}
+
 
 function getQueryObject() {
     let startDate = new Date();
@@ -143,10 +122,11 @@ function getQueryObject() {
     let startDateStr = startDate.toISOString().slice(0, 10);
     
     let endDate = new Date();
-    endDate.setDate(startDate.getDate()+END_DAY_OFFSET);
+    endDate.setDate(startDate.getDate()+STANDARD_EVENT_DAY_OFFSET);
     let endDateStr = endDate.toISOString().slice(0, 10);
 
-    return logObject({start: startDateStr, end: endDateStr});
+    //return logObject({start: startDateStr, end: endDateStr});
+    return logObject({start: '2018-05-27', end: '2018-05-28'});
 }
 
 /*
@@ -160,12 +140,15 @@ function getQueryObject() {
     return result
 */
 exports.handler = function(event, context, callback) {
+    
     Promise.all([
         getStyleSheet('./rssfeed/rss.xsl'),
-        Promise.all([getQueryObject(), getParameter('/api-key/elvanto')]).then(getEvents)
+        Promise.all([getQueryObject(), getParameter('/api-key/elvanto')])
+            .then(getEvents)
+            .then(preprocessEvents)
     ])
     .then(applyStylesheet)
-    .then(processDates)
+    .then(postProcessEvents)
     .then(xmlOutput => {
         let result = {"statusCode": 200, "headers": {'Content-Type': 'text/xml'}, "body": xmlOutput};
         logObject(result);
