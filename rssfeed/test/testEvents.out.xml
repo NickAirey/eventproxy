@@ -5,8 +5,8 @@
       <name>Sunday Morning (11am)</name>
       <description><![CDATA[]]></description>
       <where></where>
-      <start_date>2018-05-27 01:00:00</start_date>
-      <end_date>2018-05-27 02:15:00</end_date>
+      <start_date>2018-05-27 11:00:00</start_date>
+      <end_date>2018-05-27 12:15:00</end_date>
       <url>http://my.example.com/calendar_embed/?service=74d704a9-5691-47e3-af38-cc66117c94e0</url>
       <picture>https://cdn.elvanto.com.au/img/default-event-avatar.png</picture>
       <color>#119ed1</color>
@@ -16,8 +16,8 @@
       <description><![CDATA[<p><span style="background-color:#ffffff;color:#26282a;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13.3333px;font-weight:400;text-align:left;">Please put this date in your diaries for our first business meeting of the year. Agendas, Minutes and Reports will be available on May 20.</span></p>]]></description>
       <admin_notes><![CDATA[]]></admin_notes>
       <where></where>
-      <start_date>1018-05-27 03:00:00</start_date>
-      <end_date>2018-05-27 04:00:00</end_date>
+      <start_date>1018-05-27 13:00:00</start_date>
+      <end_date>2018-05-27 14:00:00</end_date>
       <url>http://my.example.com/event/33a8ad25-9ef5-434a-be85-9ac781facee3</url>
       <picture>https://cdn.example.net/img/default-event-avatar.png</picture>
       <color></color>
@@ -32,8 +32,8 @@
       <description><![CDATA[<p><span style="background-color:#ffffff;color:#26282a;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13.3333px;font-weight:400;text-align:left;">Our Catalyst group is part of a network of church based groups which in conjunction with Baptist World Aid Australia seeks to learn, pray and act on global justice issues. If you are interested in joining us, please come along.</span></p>]]></description>
       <admin_notes><![CDATA[]]></admin_notes>
       <where></where>
-      <start_date>2018-05-27 06:00:00</start_date>
-      <end_date>2018-05-27 07:00:00</end_date>
+      <start_date>2018-05-27 16:00:00</start_date>
+      <end_date>2018-05-27 17:00:00</end_date>
       <url>http://my.example.com/event/5e51681b-6336-460d-92d3-6094f79b10db</url>
       <picture>https://cdn.example.net/img/default-event-avatar.png</picture>
       <color></color>
@@ -43,8 +43,8 @@
       <name>Youth@NBC - G12 (Sunday)</name>
       <description><![CDATA[]]></description>
       <where></where>
-      <start_date>2018-05-27 06:00:00</start_date>
-      <end_date>2018-05-27 08:00:00</end_date>
+      <start_date>2018-05-27 16:00:00</start_date>
+      <end_date>2018-05-27 18:00:00</end_date>
       <url>http://my.example.com/calendar_embed/?service=4585a1e6-3674-4f86-86fe-dc4f72b53043</url>
       <picture>https://cdn.example.net/img/default-event-avatar.png</picture>
       <color>#f7d14a</color>

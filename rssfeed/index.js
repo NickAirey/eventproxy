@@ -1,15 +1,19 @@
 
-let libxslt = require('libxslt');
-let libxmljs = libxslt.libxmljs;
 let unirest = require('unirest');
 let util = require('util');
 let AWS = require('aws-sdk');
 
-let preprocessEvents = require('./xmlProcessing').preprocessEvents;
-let postProcessEvents = require('./xmlProcessing').postProcessEvents;
+let libxslt = require('libxslt');
+let xml = require('./xmlProcessing');
 
-const STANDARD_EVENT_DAY_OFFSET = 14;
-const MAJOR_EVENT_DAY_OFFSET = 90
+const STANDARD_EVENT_DAY_OFFSET = 7;
+const MAJOR_EVENT_DAY_OFFSET = 90;
+
+
+Date.prototype.addDays = function(d) {    
+   this.setTime(this.getTime() + d*24*60*60*1000); 
+   return this;   
+};
 
 
 function getParameter(paramName) {
@@ -56,6 +60,8 @@ function getEvents(params) {
             reject('unable to find authentication key');
         }
 
+        logObject(queryObject);
+
         unirest.get('https://api.elvanto.com/v1/calendar/events/getAll.xml')
             .auth(auth, 'x', true)
             .query(queryObject)
@@ -93,10 +99,6 @@ function logObject(data) {
     return data;
 }
 
-
-    
-
-
 // takes [stylesheetObject, xmlInputDoc]
 // returns processed xml doc now in rss format
 function applyStylesheet(args) {
@@ -115,20 +117,6 @@ function applyStylesheet(args) {
 }
 
 
-
-function getQueryObject() {
-    let startDate = new Date();
-    startDate.setHours(0,0,0,0);
-    let startDateStr = startDate.toISOString().slice(0, 10);
-    
-    let endDate = new Date();
-    endDate.setDate(startDate.getDate()+STANDARD_EVENT_DAY_OFFSET);
-    let endDateStr = endDate.toISOString().slice(0, 10);
-
-    //return logObject({start: startDateStr, end: endDateStr});
-    return logObject({start: '2018-05-27', end: '2018-05-28'});
-}
-
 /*
   invocation entry point
   
@@ -141,14 +129,28 @@ function getQueryObject() {
 */
 exports.handler = function(event, context, callback) {
     
+    let todayDate = new Date();
+    todayDate.setHours(0,0,0,0);
+    console.log('todayDate: '+todayDate);
+    
+    let standardEventEndDate = new Date(todayDate);
+    standardEventEndDate.addDays(STANDARD_EVENT_DAY_OFFSET);
+    console.log('standardEventEndDate: '+standardEventEndDate);
+    
+    let majorEventEndDate = new Date(todayDate);
+    majorEventEndDate.addDays(MAJOR_EVENT_DAY_OFFSET);
+    console.log('majorEventEndDate: '+majorEventEndDate);
+    
+    xml.setDates(todayDate, standardEventEndDate);
+    
     Promise.all([
         getStyleSheet('./rssfeed/rss.xsl'),
-        Promise.all([getQueryObject(), getParameter('/api-key/elvanto')])
+        Promise.all([{start: todayDate.toISOString().slice(0, 10), end: majorEventEndDate.toISOString().slice(0, 10)}, getParameter('/api-key/elvanto')])
             .then(getEvents)
-            .then(preprocessEvents)
+            .then(xml.preprocessEvents)
     ])
     .then(applyStylesheet)
-    .then(postProcessEvents)
+    .then(xml.postProcessEvents)
     .then(xmlOutput => {
         let result = {"statusCode": 200, "headers": {'Content-Type': 'text/xml'}, "body": xmlOutput};
         logObject(result);

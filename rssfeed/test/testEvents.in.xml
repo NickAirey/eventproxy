@@ -53,8 +53,8 @@
       <name>Sunday Evening (6pm)</name>
       <description><![CDATA[]]></description>
       <where></where>
-      <start_date>2018-05-27 08:00:00</start_date>
-      <end_date>2018-05-27 09:15:00</end_date>
+      <start_date>2018-05-27 18:00:00</start_date>
+      <end_date>2018-05-27 19:15:00</end_date>
       <url>http://my.example.com/calendar_embed/?service=8388580a-f074-4d68-8826-e2e2e24aafe7</url>
       <picture>https://cdn.example.net/img/default-event-avatar.png</picture>
       <color>#f7d14a</color>
