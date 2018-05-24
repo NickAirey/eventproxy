@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rsp generated_in="0.202" status="ok">
+  <events>
+    <event id="2fd0d92e-408d-411f-969d-009bad8fed0f" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="0|0" all_day="0">
+      <name>Holiday Club 2018 - AlienNation</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where/>
+      <start_date>1018-07-09 09:30:00</start_date>
+      <end_date>2018-07-09 13:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+    <event id="2fd0d92e-408d-411f-969d-009bad8fed0f" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="1|0" all_day="0">
+      <name>Holiday Club 2018 - AlienNation</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where/>
+      <start_date>1018-07-10 09:30:00</start_date>
+      <end_date>2018-07-10 13:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+    <event id="2fd0d92e-408d-411f-969d-009bad8fed0f" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="2|0" all_day="0">
+      <name>Holiday Club 2018 - AlienNation</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where/>
+      <start_date>1018-07-11 09:30:00</start_date>
+      <end_date>2018-07-11 13:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+    <event id="2fd0d92e-408d-411f-969d-009bad8fed0f" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="3|0" all_day="0">
+      <name>Holiday Club 2018 - AlienNation</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where/>
+      <start_date>1018-07-12 09:30:00</start_date>
+      <end_date>2018-07-12 13:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+    <event id="2fd0d92e-408d-411f-969d-009bad8fed0f" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="4|0" all_day="0">
+      <name>Holiday Club 2018 - AlienNation</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where/>
+      <start_date>1018-07-13 09:30:00</start_date>
+      <end_date>2018-07-13 13:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+    <event id="cb629567-d545-4385-a3df-ea2d03cb044a" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="" all_day="0">
+      <name>Holiday Club Concert</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where>33-39 Baumans Road, Peakhurst</where>
+      <start_date>1018-07-13 19:30:00</start_date>
+      <end_date>2018-07-13 21:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+    <event id="2fd0d92e-408d-411f-969d-009bad8fed0f" calendar_id="54db0941-ddfe-11e5-aba7-06fb5fa8f77d" interval="5|0" all_day="0">
+      <name>Holiday Club 2018 - AlienNation</name>
+      <description><![CDATA[]]></description>
+      <admin_notes><![CDATA[]]></admin_notes>
+      <where/>
+      <start_date>1018-07-14 09:30:00</start_date>
+      <end_date>2018-07-14 13:00:00</end_date>
+      <color/>
+      <assets>
+        <asset id="7b151090-f018-4406-b3a0-cdb629c0c5dd">
+          <name>MajorEvent</name>
+        </asset>
+      </assets>
+    </event>
+  </events>
+</rsp>
