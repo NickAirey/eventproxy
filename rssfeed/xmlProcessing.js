@@ -41,6 +41,9 @@ function setAsUTCElement(element) {
 exports.preprocessEvents = function(xmlInputStr) {
     console.log("Start preprocessing events ");
 
+    console.log("before preprocessing");
+    //console.log(xmlInputStr);
+
     // parse xml
     let xmlDoc = libxmljs.parseXml(xmlInputStr, { noblanks: true });
     
@@ -62,6 +65,8 @@ exports.preprocessEvents = function(xmlInputStr) {
     });
     
     console.log("Finished preprocessing events");
+    //console.log(xmlDoc.toString());
+    
     return xmlDoc;
 };
     

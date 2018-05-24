@@ -29,6 +29,21 @@ describe('#xmlProcessEvents() tests', function () {
         assert.equal(xml.preprocessEvents(eventsXmlInStr).toString(), eventsXmlOut.toString(), 'event xml date processing');
     });
     
+    it("preProcessing", function () {
+        
+        let eventsXmlInStr = fs.readFileSync("testMultiEvent.in.xml", "utf8");
+        let eventsXmlOut = libxmljs.parseXml(fs.readFileSync("testMultiEvent.out.xml", "utf8"));
+        
+        let d = new Date('2018-05-27');
+        let d2 = new Date(d).addDays(1);
+        
+        console.log(d);
+        console.log(d2);
+        xml.setDates(d, d2);
+        
+        assert.equal(xml.preprocessEvents(eventsXmlInStr).toString(), eventsXmlOut.toString(), 'event xml date processing');
+    });
+    
     it("postProcessing", function () {
         
         let rssXmlInDoc = libxmljs.parseXml(fs.readFileSync("testRss.in.xml", "utf8"));

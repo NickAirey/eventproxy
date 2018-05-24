@@ -6,7 +6,7 @@ let AWS = require('aws-sdk');
 let libxslt = require('libxslt');
 let xml = require('./xmlProcessing');
 
-const STANDARD_EVENT_DAY_OFFSET = 7;
+const STANDARD_EVENT_DAY_OFFSET = 14;
 const MAJOR_EVENT_DAY_OFFSET = 90;
 
 
