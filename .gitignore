@@ -60,3 +60,5 @@ typings/
 
 *.zip
 .application.json
+
+*/node_modules

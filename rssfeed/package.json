@@ -9,10 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.243.1",
-    "chai": "^4.1.2",
-    "libxslt": "^0.7.0",
-    "mocha": "^5.2.0",
-    "unirest": "^0.5.1"
+    "aws-sdk": ">=2.334.0",
+    "axios": "0.18.x",
+    "xmlbuilder": "10.1.x"
   }
 }
