@@ -4,6 +4,7 @@
 
 let ssm_config = require('config_aws_ssm');
 let rssxml = require('rssxml');
+let events = require('events');
 let util = require('util');
 
 /**
@@ -17,8 +18,13 @@ exports.handler = async (event) => {
         // get config from SSM
         let config = await ssm_config.getConfig();
 
-        // construct rssXml, put into API result object format
-        let rssXml = rssxml.rssXmlBuilder(null, config, Date.UTC());
+        // get source events
+        let events = await events.getEvents(config);
+
+        // construct rssXml from events and config, rundate is now
+        let rssXml = rssxml.rssXmlBuilder(events, config, Date.UTC());
+
+        // package rssXml in AWS API format
         let result = {"statusCode": 200, "headers": {'Content-Type': 'text/xml'}, "body": rssXml};
 
         console.log(util.inspect(result, {showHidden:false, depth:5}));

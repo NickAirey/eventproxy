@@ -6,6 +6,6 @@
   "/organisation/events/feed-url": "https://api.example.com/eventsrss",
   "/organisation/events/date-utc-offset": "10",
 
-  "/elvanto/calendar-api": "https://api.elvanto.com/v1/calendar/events/getAll.xml",
+  "/elvanto/calendar-api": "https://api.elvanto.com/v1/calendar/events/getAll.json",
   "/elvanto/api-key": "12345zyx987"
 }
