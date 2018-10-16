@@ -18,7 +18,7 @@ Date.prototype.addHours = function(h) {
  * @returns {string}
  */
 function addTZOffsetISOElement(UTCDateStr, feedUTCOffset) {
-    var date = new Date(UTCDateStr+ " UTC");
+    let date = new Date(UTCDateStr+ " UTC");
     date.addHours(feedUTCOffset);
     return date.toUTCString().slice(0, -4)+" +"+feedUTCOffset+"00";
 }
@@ -28,22 +28,22 @@ function addTZOffsetISOElement(UTCDateStr, feedUTCOffset) {
  * convert event object to rss object
  *
  * @param event
+ * @param feedUTCOffset
  * @returns {{item: {title: *, description: *, pubDate: *}}}
  */
-exports.eventToRssItem = function (event, feedUtcOffset) {
+exports.eventToRssItem = function (event, feedUTCOffset) {
 
-    let utcDateStr = event.start_date;
-    let aestDateStr = addTZOffsetISOElement(utcDateStr, feedUtcOffset);
+    let offsetDateStr = addTZOffsetISOElement(event.start_date, feedUTCOffset);
 
     return {
         item: {
             title: event.name,
             description: event.description,
-            pubDate: aestDateStr,
+            pubDate: offsetDateStr,
             guid: { '@isPermaLink': false, '#text': event.id }
         }
     };
-}
+};
 
 /*
     create a rss compliant xml string, merging the rssItems, the config and run date.
