@@ -1,0 +1,63 @@
+
+{
+  "generated_in": "0.018",
+  "status": "ok",
+  "events": {
+    "on_this_page": 28,
+    "page": 1,
+    "per_page": 100,
+    "total": 28,
+    "event": [
+      {
+        "id": "52139416-ff4d-11e2-847a-46e7b7dc2836",
+        "picture": "https://path.to/image.png",
+        "calendar_id": "847a9416-ff4d-2836-5213-46e7b7dc11e2",
+        "interval": "",
+        "name": "Church Picnic",
+        "description": "Come down and enjoy a fun family picnic!",
+        "admin_notes": "ADMINS ONLY: Please ensure that we have all the BBQs cleaned by the end of the picnic!",
+        "where": "The Park",
+        "start_date": "2018-06-03 04:00:00",
+        "end_date": "2018-06-03 05:00:00",
+        "all_day": 1,
+        "url": "http://yourchurch.elvanto.com/event/5213a546-ff4d-11e2-847a-46e7b7dc2836",
+        "color": "#000000",
+        "locations": {
+          "location": [
+            {
+              "id": "8a631195-8914-4136-858c-f160885ab60d",
+              "name": "Central Campus"
+            },
+            {
+              "id": "9f3aec97-3d61-471d-ab50-5f28070d970d",
+              "name": "North Campus"
+            }
+          ]
+        }
+      },
+      {
+        "id": "5213bc7a-ff4d-11e2-847a-46e7b7dc2836",
+        "picture": "https://path.to/image.png",
+        "calendar_id": "847a9416-ff4d-2836-5213-46e7b7dc11e2",
+        "interval": "",
+        "name": "Leaders Meeting",
+        "description": "",
+        "admin_notes": "ADMINS ONLY: Meeting Minutes from last meeting needs to be printed",
+        "where": "Church Building",
+        "start_date": "2018-06-10 04:00:00",
+        "end_date": "2018-06-10 05:00:00",
+        "all_day": 0,
+        "url": "http://yourchurch.elvanto.com/cevent/5213ce04-ff4d-11e2-847a-46e7b7dc2836",
+        "color": "#f7d14a",
+        "locations": {
+          "location": [
+            {
+              "id": "8a631195-8914-4136-858c-f160885ab60d",
+              "name": "Central Campus"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
