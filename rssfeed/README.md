@@ -1,8 +1,8 @@
 # rssfeed
 
-Proxy code for taking public events from the [elvanto](elvanto.com) and presenting them as an RSS feed.
+Proxy code for taking public events from the [elvanto](https://www.elvanto.com) and presenting them as an RSS feed.
 
-This is most useful because it can then be connected to a [mailchimp](mailchimp.com) email template to generate mailouts containing events.
+This is most useful because it can then be connected to a [mailchimp](https://mailchimp.com) email template to generate mailouts containing events.
 More info on how to connect a mailchimp template to a rss feed is [here](https://templates.mailchimp.com/getting-started/merge-tags/rss-merge-tags/)
 
 
