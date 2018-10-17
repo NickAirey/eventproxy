@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": ">=2.334.0",
-    "axios": "0.18.x",
-    "xmlbuilder": "10.1.x"
+    "axios": "^0.18.0",
+    "xmlbuilder": "^10.1.0"
   }
 }

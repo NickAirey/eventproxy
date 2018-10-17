@@ -38,7 +38,7 @@ describe('object conversion', () => {
 
         let xmlGenerated = rssxml.rssXmlBuilder(JSON.parse(events).events, JSON.parse(config), new Date(2018, 4, 30, 9));
 
-        let xmlReference = fs.readFileSync('test/testEvents.out.xml', 'utf-8');
+        let xmlReference = fs.readFileSync('test/testRss.out.xml', 'utf-8');
 
         assert.deepEqual(xmlGenerated, xmlReference);
     });
