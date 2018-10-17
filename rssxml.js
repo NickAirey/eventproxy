@@ -67,7 +67,6 @@ exports.rssXmlBuilder = function(events, feedConfig, runDate) {
     });
 
     let xmlStr = root.end({pretty: true});
-    console.log(xmlStr);
 
     return xmlStr;
 };
