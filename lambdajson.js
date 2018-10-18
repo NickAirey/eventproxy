@@ -45,8 +45,7 @@ exports.handler = async (event) => {
         let result = {
             "statusCode": 200,
             "headers": {
-                'Content-Type': 'text/xml',
-                'Access-Control-Allow-Origin:': '*'
+                'Access-Control-Allow-Origin': '*'
             },
             "body": JSON.stringify(processedEventResult)
         };
