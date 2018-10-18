@@ -5,7 +5,7 @@ let assert = require('assert');
 let util = require('util');
 
 let ssm_config = require('../config_aws_ssm');
-let event_src = require('../events');
+let el_events = require('../el_events');
 let rssxml = require('../rssxml');
 
 
@@ -24,16 +24,16 @@ describe('lambda rss integration tests', function() {
             let endDateFeatured = new Date(now);
             endDateFeatured.setDate(endDateFeatured.getDate()+7);
 
-            let maxEndDate = event_src.maxDate(endDateEvents, endDateFeatured, now);
+            let maxEndDate = el_events.maxDate(endDateEvents, endDateFeatured, now);
 
             // get config from SSM
             let config = await ssm_config.getConfig();
 
             // get source events
-            let events = await event_src.getEvents(config, now, maxEndDate);
+            let events = await el_events.getEvents(config, now, maxEndDate);
 
             // postprocess events
-            let processedEvents = event_src.processEvents(events.events, endDateEvents, endDateFeatured);
+            let processedEvents = el_events.processEvents(events.events, endDateEvents, endDateFeatured);
 
             // construct rssXml from events and config, rundate is now
             let rssXml = rssxml.rssXmlBuilder(processedEvents, config, now);

@@ -4,7 +4,7 @@
 
 let ssm_config = require('config_aws_ssm');
 let rssxml = require('rssxml');
-let event_src = require('events');
+let el_events = require('el_events');
 let util = require('util');
 
 /**
@@ -23,16 +23,16 @@ exports.handler = async (event) => {
         let endDateFeatured = new Date(now);
         endDateFeatured.setDate(endDateFeatured.getDate()+60);
 
-        let maxEndDate = event_src.maxDate(endDateEvents, endDateFeatured, now);
+        let maxEndDate = el_events.maxDate(endDateEvents, endDateFeatured, now);
 
         // get config from SSM
         let config = await ssm_config.getConfig();
 
         // get source events
-        let events = await event_src.getEvents(config, now, maxEndDate);
+        let events = await el_events.getEvents(config, now, maxEndDate);
 
         // postprocess events
-        let processedEvents = event_src.processEvents(events.events, endDateEvents, endDateFeatured);
+        let processedEvents = el_events.processEvents(events.events, endDateEvents, endDateFeatured);
 
         // construct rssXml from processed events, config and run date
         let rssXml = rssxml.rssXmlBuilder(processedEvents, config, now);

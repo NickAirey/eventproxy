@@ -95,11 +95,11 @@ exports.getEvents = async function(config, startDate, endDate) {
 exports.processEvents = function(events, eventMaxDate, featuredMaxDate) {
 
     if (eventMaxDate!=null && !(eventMaxDate instanceof Date)) {
-        throw new Error("eventMaxDate must be a Date object")
+        throw new Error("eventMaxDate must be a Date object");
     }
 
     if (featuredMaxDate!=null && !(featuredMaxDate instanceof Date)) {
-        throw new Error("featuredMaxDate must be a Date object")
+        throw new Error("featuredMaxDate must be a Date object");
     }
 
     events.event.forEach(event => {
