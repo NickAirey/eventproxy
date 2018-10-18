@@ -5,17 +5,28 @@
 let httpClient = require('axios');
 let util = require('util');
 
-exports.getEvents = async function(config) {
+exports.getEvents = async function(config, startDate, endDate) {
 
+    if (typeof startDate === "undefined" || typeof endDate === "undefined") {
+        throw new Error("invocation parameters missing");
+    }
+
+    if ( !(startDate instanceof Date && endDate instanceof Date)) {
+        throw new Error("parameters must be dates");
+    }
+
+    let paramsObj = {
+        'fields[0]': 'assets',
+        'start': startDate.toISOString().substr(0,10),
+        'end': endDate.toISOString().substr(0,10)
+    };
+
+    console.log("params: "+util.inspect(paramsObj));
     let result = null;
 
     try {
         result = await httpClient.get(config['/elvanto/calendar-api'], {
-            params: {
-                'fields[0]': 'assets',
-                'start': '2018-10-17',
-                'end': '2018-12-17',
-            },
+            params: paramsObj,
             auth: {
                 username: config['/elvanto/api-key'],
                 password: 'x'
@@ -34,7 +45,7 @@ exports.getEvents = async function(config) {
         throw new Error(result.data.error.message);
     }
 
-    console.log(util.inspect(result.data.events, {showHidden:false, depth:0}));
+    console.log("result: "+util.inspect(result.data.events, {showHidden:false, depth:0}));
 
     return result.data;
 };
@@ -46,7 +57,15 @@ exports.getEvents = async function(config) {
  *
  * @param events
  */
-exports.processEvents = function(events) {
+exports.processEvents = function(events, eventMaxDate, featuredMaxDate) {
+
+    if (eventMaxDate && !(eventMaxDate instanceof Date)) {
+        throw new Error("eventMaxDate must be a Date object")
+    }
+
+    if (featuredMaxDate && !(featuredMaxDate instanceof Date)) {
+        throw new Error("featuredMaxDate must be a Date object")
+    }
 
     events.event.forEach(event => {
        delete event.url;
@@ -65,5 +84,15 @@ exports.processEvents = function(events) {
            delete event.assets;
        }
         event.featured = featured;
+    });
+
+    console.log("eventMaxDate: "+eventMaxDate + " featuredMaxDate: "+featuredMaxDate)
+
+    return events.event.filter(e => {
+        if (e.featured) {
+            return (featuredMaxDate && new Date(e.start_date) <= featuredMaxDate)
+        } else {
+            return (eventMaxDate && new Date(e.start_date) <= eventMaxDate)
+        }
     });
 };

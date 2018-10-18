@@ -34,13 +34,15 @@ function addTZOffsetISOElement(UTCDateStr, feedUTCOffset) {
 exports.eventToRssItem = function (event, feedUTCOffset) {
 
     let offsetDateStr = addTZOffsetISOElement(event.start_date, feedUTCOffset);
+    let featured = (typeof event.featured === "undefined") ? false: event.featured;
 
     return {
         item: {
             title: event.name,
             description: event.description,
             pubDate: offsetDateStr,
-            guid: { '@isPermaLink': false, '#text': event.id }
+            guid: { '@isPermaLink': false, '#text': event.id },
+            category: { '@domain': 'featured', '#text': featured }
         }
     };
 };
@@ -58,15 +60,13 @@ exports.rssXmlBuilder = function(events, feedConfig, runDate) {
         .element('title', feedConfig["/organisation/general/name"]).up()
         .element('description', feedConfig["/organisation/events/feed-description"]).up()
         .element('link', feedConfig["/organisation/general/website-url"]).up()
-        .element('pubDate', addTZOffsetISOElement(runDate, feedUtcOffset)).up()
+        .element('pubDate', runDate.toUTCString()).up()
         .element('atom:link').att('href', feedConfig["/organisation/events/feed-url"]).att('rel', 'self').att('type', 'application/rss+xml').up();
 
     // convert each event to rss format and add to xml builder root context
-    events.event.forEach( e => {
+    events.forEach( e => {
         root.element(exports.eventToRssItem(e, feedUtcOffset));
     });
 
-    let xmlStr = root.end({pretty: true});
-
-    return xmlStr;
+    return root.end({pretty: true});
 };

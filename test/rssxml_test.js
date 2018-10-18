@@ -12,7 +12,8 @@ describe('object conversion', () => {
             "name": "Church Picnic",
             "description": "Come down and enjoy a fun family picnic!",
             "where": "The Park",
-            "start_date": "2018-06-03 04:00:00"
+            "start_date": "2018-06-03 04:00:00",
+            "featured": true
         };
 
         let rssItemRef = {
@@ -23,6 +24,10 @@ describe('object conversion', () => {
                 guid: {
                     '#text': "52139416-ff4d-11e2-847a-46e7b7dc2836",
                     '@isPermaLink': false
+                },
+                category: {
+                    '#text': true,
+                    '@domain': "featured"
                 }
             }
         };
@@ -36,7 +41,7 @@ describe('object conversion', () => {
 
         let config = fs.readFileSync('test/config_test.json', 'utf-8');
 
-        let xmlGenerated = rssxml.rssXmlBuilder(JSON.parse(events).events, JSON.parse(config), new Date(2018, 4, 30, 9));
+        let xmlGenerated = rssxml.rssXmlBuilder(JSON.parse(events).events.event, JSON.parse(config), new Date(2018, 4, 30, 9));
 
         let xmlReference = fs.readFileSync('test/testRss.out.xml', 'utf-8');
 

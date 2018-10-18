@@ -4,19 +4,21 @@
     <title>Example Company</title>
     <description>Example RSS event feed</description>
     <link>https://example.com</link>
-    <pubDate>Wed, 30 May 2018 19:00:00 +1000</pubDate>
+    <pubDate>Tue, 29 May 2018 23:00:00 GMT</pubDate>
     <atom:link href="https://api.example.com/eventsrss" rel="self" type="application/rss+xml"/>
     <item>
       <title>Church Picnic</title>
       <description>Come down and enjoy a fun family picnic!</description>
       <pubDate>Sun, 03 Jun 2018 14:00:00 +1000</pubDate>
       <guid isPermaLink="false">52139416-ff4d-11e2-847a-46e7b7dc2836</guid>
+      <category domain="featured">false</category>
     </item>
     <item>
       <title>Leaders Meeting</title>
       <description/>
       <pubDate>Sun, 10 Jun 2018 14:00:00 +1000</pubDate>
       <guid isPermaLink="false">5213bc7a-ff4d-11e2-847a-46e7b7dc2836</guid>
+      <category domain="featured">false</category>
     </item>
   </channel>
 </rss>
