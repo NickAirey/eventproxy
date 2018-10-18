@@ -41,10 +41,10 @@ exports.getEvents = async function(config, startDate, endDate) {
     };
 
     console.log("params: "+util.inspect(paramsObj));
-    let result = null;
+    let response = null;
 
     try {
-        result = await httpClient.get(config['/elvanto/calendar-api'], {
+        response = await httpClient.get(config['/elvanto/calendar-api'], {
             params: paramsObj,
             auth: {
                 username: config['/elvanto/api-key'],
@@ -59,24 +59,30 @@ exports.getEvents = async function(config, startDate, endDate) {
         throw new Error(error);
     }
 
-    if (result.data.error) {
-        if (result.data.error.code === 404) {
-            console.log("no results found");
-            // we'll return an empty object here rather than throwing an error
-            return {
-                events: {
-                    event: []
+    switch (response.data.status) {
+        case 'ok':
+            console.log("response: "+util.inspect(response.data.events, {showHidden:false, depth:0}));
+            return response.data;
+            break;
+
+        case 'fail':
+            if (response.data.error.code === 404) {
+                console.log(response.data.error.message);
+                // we'll return an empty object here rather than throwing an error
+                return {
+                    events: {
+                        event: []
+                    }
                 }
+            } else {
+                console.error(util.inspect(response.data.error));
+                throw new Error(response.data.error.message);
             }
-        } else {
-            console.error(util.inspect(result.data.error));
-            throw new Error(result.data.error.message);
-        }
+            break;
+
+        default:
+            throw new Error('unknown response code');
     }
-
-    console.log("result: "+util.inspect(result.data.events, {showHidden:false, depth:0}));
-
-    return result.data;
 };
 
 
