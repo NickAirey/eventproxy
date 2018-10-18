@@ -23,13 +23,13 @@ exports.handler = async (event) => {
         let endDateFeatured = new Date(now);
         endDateFeatured.setDate(endDateFeatured.getDate()+60);
 
-        let maxEventDate = (endDateEvents > endDateFeatured) ? endDateEvents : endDateFeatured;
+        let maxEndDate = event_src.maxDate(endDateEvents, endDateFeatured, now);
 
         // get config from SSM
         let config = await ssm_config.getConfig();
 
         // get source events
-        let events = await event_src.getEvents(config, now, maxEventDate);
+        let events = await event_src.getEvents(config, now, maxEndDate);
 
         // postprocess events
         let processedEvents = event_src.processEvents(events.events, endDateEvents, endDateFeatured);

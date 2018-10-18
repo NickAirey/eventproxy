@@ -5,6 +5,25 @@
 let httpClient = require('axios');
 let util = require('util');
 
+/**
+ * returns the max of the dates or def if both null
+ *
+ * @param date1
+ * @param date2
+ * @param def
+ */
+exports.maxDate = function(date1, date2, def) {
+    if (date1 == null) {
+        return date2 == null ? def : date2;
+    } else {
+        if (date2 == null) {
+            return date1;
+        } else {
+            return date1 > date2 ? date1 : date2
+        }
+    }
+};
+
 exports.getEvents = async function(config, startDate, endDate) {
 
     if (typeof startDate === "undefined" || typeof endDate === "undefined") {
@@ -41,8 +60,18 @@ exports.getEvents = async function(config, startDate, endDate) {
     }
 
     if (result.data.error) {
-        console.error(util.inspect(result.data.error));
-        throw new Error(result.data.error.message);
+        if (result.data.error.code === 404) {
+            console.log("no results found");
+            // we'll return an empty object here rather than throwing an error
+            return {
+                events: {
+                    event: []
+                }
+            }
+        } else {
+            console.error(util.inspect(result.data.error));
+            throw new Error(result.data.error.message);
+        }
     }
 
     console.log("result: "+util.inspect(result.data.events, {showHidden:false, depth:0}));
@@ -86,7 +115,7 @@ exports.processEvents = function(events, eventMaxDate, featuredMaxDate) {
         event.featured = featured;
     });
 
-    console.log("eventMaxDate: "+eventMaxDate.toISOString().substr(0,10) + " featuredMaxDate: "+featuredMaxDate.toISOString().substr(0,10))
+    console.log("eventMaxDate: "+eventMaxDate + ", featuredMaxDate: "+featuredMaxDate);
 
     return events.event.filter(e => {
         if (e.featured) {
