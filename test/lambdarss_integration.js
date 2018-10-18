@@ -16,19 +16,19 @@ describe('lambda rss integration tests', function() {
     it('lambda request', async() => {
 
         try {
-            // get config from SSM
-            let config = await ssm_config.getConfig();
-
             let now = new Date();
 
             let endDateEvents = new Date(now);
             endDateEvents.setDate(endDateEvents.getDate()+14);
 
             let endDateFeatured = new Date(now);
-            endDateFeatured.setDate(endDateFeatured.getDate()+90);
+            endDateFeatured.setDate(endDateFeatured.getDate()+60);
+
+            // get config from SSM
+            let config = await ssm_config.getConfig();
 
             // get source events
-            let events = await event_src.getEvents(config, now, endDateFeatured);
+            let events = await event_src.getEvents(config, now, (endDateEvents > endDateFeatured) ? endDateEvents : endDateFeatured);
 
             // postprocess events
             let processedEvents = event_src.processEvents(events.events, endDateEvents, endDateFeatured);

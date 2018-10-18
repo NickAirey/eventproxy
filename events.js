@@ -59,11 +59,11 @@ exports.getEvents = async function(config, startDate, endDate) {
  */
 exports.processEvents = function(events, eventMaxDate, featuredMaxDate) {
 
-    if (eventMaxDate && !(eventMaxDate instanceof Date)) {
+    if (eventMaxDate!=null && !(eventMaxDate instanceof Date)) {
         throw new Error("eventMaxDate must be a Date object")
     }
 
-    if (featuredMaxDate && !(featuredMaxDate instanceof Date)) {
+    if (featuredMaxDate!=null && !(featuredMaxDate instanceof Date)) {
         throw new Error("featuredMaxDate must be a Date object")
     }
 
@@ -86,13 +86,13 @@ exports.processEvents = function(events, eventMaxDate, featuredMaxDate) {
         event.featured = featured;
     });
 
-    console.log("eventMaxDate: "+eventMaxDate + " featuredMaxDate: "+featuredMaxDate)
+    console.log("eventMaxDate: "+eventMaxDate.toISOString().substr(0,10) + " featuredMaxDate: "+featuredMaxDate.toISOString().substr(0,10))
 
     return events.event.filter(e => {
         if (e.featured) {
-            return (featuredMaxDate && new Date(e.start_date) <= featuredMaxDate)
+            return (featuredMaxDate!=null && new Date(e.start_date) <= featuredMaxDate)
         } else {
-            return (eventMaxDate && new Date(e.start_date) <= eventMaxDate)
+            return (eventMaxDate!=null && new Date(e.start_date) <= eventMaxDate)
         }
     });
 };
