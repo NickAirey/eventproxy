@@ -38,7 +38,11 @@ exports.handler = async (event) => {
         let rssXml = rssxml.rssXmlBuilder(processedEvents, config, now);
 
         // package rssXml in AWS API format
-        let result = {"statusCode": 200, "headers": {'Content-Type': 'text/xml'}, "body": rssXml};
+        let result = {
+            "statusCode": 200,
+            "headers": {'Content-Type': 'text/xml'},
+            "body": rssXml
+        };
 
         console.log(util.inspect(result, {showHidden:false, depth:5}));
         return result;
