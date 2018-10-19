@@ -5,6 +5,7 @@
 let ssm_config = require('config_aws_ssm');
 let rssxml = require('rssxml');
 let el_events = require('el_events');
+let date_handling = require('date_handling
 let util = require('util');
 
 /**
@@ -30,7 +31,7 @@ exports.handler = async (event) => {
             endDateFeatured = date_handling.getDateOffset(event.queryStringParameters.featuredDays, now);
         }
 
-        let maxEndDate = el_events.maxDate(endDateEvents, endDateFeatured, now);
+        let maxEndDate = date_handling.maxDate(endDateEvents, endDateFeatured, now);
 
         // get config from SSM
         let config = await ssm_config.getConfig();
