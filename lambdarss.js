@@ -17,11 +17,18 @@ exports.handler = async (event) => {
     try {
         let now = new Date();
 
-        let endDateEvents = new Date(now);
-        endDateEvents.setDate(endDateEvents.getDate()+14);
+        let endDateEvents = null;
+        let endDateFeatured = null;
 
-        let endDateFeatured = new Date(now);
-        endDateFeatured.setDate(endDateFeatured.getDate()+60);
+        if (! (event.queryStringParameters === undefined)) {
+            console.log("queryStringParameters:" + util.inspect(event.queryStringParameters));
+
+            // calculate end date for standard events
+            endDateEvents = date_handling.getDateOffset(event.queryStringParameters.eventDays, now);
+
+            // calculate end date for featured events
+            endDateFeatured = date_handling.getDateOffset(event.queryStringParameters.featuredDays, now);
+        }
 
         let maxEndDate = el_events.maxDate(endDateEvents, endDateFeatured, now);
 

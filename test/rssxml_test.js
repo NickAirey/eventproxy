@@ -1,7 +1,9 @@
 
 let assert = require('assert');
 let fs = require('fs');
+let date_handling = require('../date_handling');
 let rssxml = require('../rssxml');
+
 
 describe('object conversion', () => {
 

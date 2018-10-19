@@ -6,24 +6,12 @@ let httpClient = require('axios');
 let util = require('util');
 
 /**
- * returns the max of the dates or def if both null
  *
- * @param date1
- * @param date2
- * @param def
+ * @param config
+ * @param startDate
+ * @param endDate
+ * @returns {Promise<*>}
  */
-exports.maxDate = function(date1, date2, def) {
-    if (date1 == null) {
-        return date2 == null ? def : date2;
-    } else {
-        if (date2 == null) {
-            return date1;
-        } else {
-            return date1 > date2 ? date1 : date2
-        }
-    }
-};
-
 exports.getEvents = async function(config, startDate, endDate) {
 
     if (typeof startDate === "undefined" || typeof endDate === "undefined") {
@@ -91,6 +79,8 @@ exports.getEvents = async function(config, startDate, endDate) {
  * if we have 'Featured' as an asset, we set featured as a property flags on the object
  *
  * @param events
+ * @param eventMaxDate
+ * @param featuredMaxDate
  */
 exports.processEvents = function(events, eventMaxDate, featuredMaxDate) {
 

@@ -4,10 +4,14 @@
 
 let ssm_config = require('config_aws_ssm');
 let el_events = require('el_events');
+let date_handling = require('date_handling');
 let util = require('util');
+
 
 /**
  * AWS API lambda handler
+ *
+ * the event parameter will contain a queryStringParameters attribute which contains the actual query params
  *
  * @param event
  * @returns {Promise<*>}
@@ -16,13 +20,21 @@ exports.handler = async (event) => {
     try {
         let now = new Date();
 
-        let endDateEvents = new Date(now);
-        endDateEvents.setDate(endDateEvents.getDate()+14);
+        let endDateEvents = null;
+        let endDateFeatured = null;
 
-        let endDateFeatured = new Date(now);
-        endDateFeatured.setDate(endDateFeatured.getDate()+60);
+        if (! (event.queryStringParameters === undefined)) {
+            console.log("queryStringParameters:" + util.inspect(event.queryStringParameters));
 
-        let maxEndDate = el_events.maxDate(endDateEvents, endDateFeatured, now);
+            // calculate end date for standard events
+            endDateEvents = date_handling.getDateOffset(event.queryStringParameters.eventDays, now);
+
+            // calculate end date for featured events
+            endDateFeatured = date_handling.getDateOffset(event.queryStringParameters.featuredDays, now);
+        }
+
+        // calculate max of the two dates
+        let maxEndDate = date_handling.maxDate(endDateEvents, endDateFeatured, now);
 
         // get config from SSM
         let config = await ssm_config.getConfig();

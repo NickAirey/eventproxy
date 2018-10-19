@@ -7,7 +7,7 @@ let util = require('util');
 let ssm_config = require('../config_aws_ssm');
 let el_events = require('../el_events');
 let rssxml = require('../rssxml');
-
+let date_handling = require('../date_handling');
 
 describe('lambda rss integration tests', function() {
 
@@ -24,7 +24,7 @@ describe('lambda rss integration tests', function() {
             let endDateFeatured = new Date(now);
             endDateFeatured.setDate(endDateFeatured.getDate()+7);
 
-            let maxEndDate = el_events.maxDate(endDateEvents, endDateFeatured, now);
+            let maxEndDate = date_handling.maxDate(endDateEvents, endDateFeatured, now);
 
             // get config from SSM
             let config = await ssm_config.getConfig();

@@ -5,10 +5,6 @@
 
 let builder = require('xmlbuilder');
 
-Date.prototype.addHours = function(h) {
-    this.setTime(this.getTime() + (h*60*60*1000));
-    return this;
-};
 
 /**
  * adds a specified offset hours to a date string, and returns the string in UTC format
