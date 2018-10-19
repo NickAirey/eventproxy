@@ -5,7 +5,7 @@
 let ssm_config = require('config_aws_ssm');
 let rssxml = require('rssxml');
 let el_events = require('el_events');
-let date_handling = require('date_handling
+let date_handling = require('date_handling');
 let util = require('util');
 
 /**
