@@ -22,7 +22,7 @@ describe('object conversion', () => {
             item: {
                 title: "Church Picnic",
                 description: "Come down and enjoy a fun family picnic!",
-                pubDate: "Sun, 03 Jun 2018 14:00:00 +1000",
+                pubDate: "Sat, 02 Jun 2018 18:00:00 GMT",
                 guid: {
                     '#text': "52139416-ff4d-11e2-847a-46e7b7dc2836",
                     '@isPermaLink': false
